@@ -13,7 +13,7 @@ class ESLintChecker {
 		const { results } = new CLIEngine({
 			baseConfig,
 			cwd: directory,
-		});
+		}).executeOnFiles(["."]);
 		
 		return results.map(result => {
 			return new File(result.filePath, result.messages.map(msg => {
