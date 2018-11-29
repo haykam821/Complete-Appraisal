@@ -1,6 +1,8 @@
+const path = require("path");
+
 class File {
-	constructor(path, errors) {
-		this.path = path;
+	constructor(filePath, errors) {
+		this.path = path.relative("./", filePath);
 		this.errors = errors;
 	}
 }

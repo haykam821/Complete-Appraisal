@@ -17,8 +17,8 @@ class ESLintChecker {
 		
 		return results.map(result => {
 			return new File(result.filePath, result.messages.map(msg => {
-				return new Problem({
-					id: this.id + msg.ruleId,
+				return new Problem(this, {
+					id: msg.ruleId,
 					message: msg.message,
 					column: msg.column,
 					line: msg.line,
@@ -26,4 +26,5 @@ class ESLintChecker {
 			}));
 		});
 	}
-} 
+}
+module.exports = ESLintChecker;
