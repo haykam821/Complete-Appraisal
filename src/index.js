@@ -1,5 +1,10 @@
-const { CLIEngine } = require("eslint");
-const baseConfig = require("eslint-config-haykam");
+const rqAll = require("require-all");
+const checkers = Object.values(rqAll({
+	dirname: __dirname + "/checkers",
+	resolve: checker => new checker(),
+}));
+
+const File = require("./util/file.js");
 
 function run(directory) {
 	if (typeof directory === "undefined") {
@@ -8,9 +13,17 @@ function run(directory) {
 		throw new TypeError("The directory must be a string.");
 	}
 
-	const lint = new CLIEngine({
-		baseConfig,
-		cwd: directory,
+	const done = {};
+
+	checkers.map(checker => {
+		return checker.check(directory);
+	}).flat().forEach(file => {
+		if (!done[file.path]) {
+			done[file.path] = new File(file.path, []);
+		}
+		done[file.path].errors = done[file.path].errors.concat(...file.errors);
 	});
+
+	return done;
 }
 module.exports = run;
