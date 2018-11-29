@@ -14,6 +14,7 @@ function run(directory) {
 	}
 
 	const done = {};
+	let problemCount = 0;
 
 	checkers.map(checker => {
 		return checker.check(directory);
@@ -21,9 +22,13 @@ function run(directory) {
 		if (!done[file.path]) {
 			done[file.path] = new File(file.path, []);
 		}
-		done[file.path].problems = done[file.path].problems.concat(...file.errors);
+		done[file.path].problems = done[file.path].problems.concat(...file.problems);
+		problemCount += file.problems.length;
 	});
 
-	return Object.values(done);
+	return {
+		problems: Object.values(done),
+		problemCount,
+	}
 }
 module.exports = run;
