@@ -6,7 +6,7 @@ const checkers = Object.values(rqAll({
 
 const File = require("./util/file.js");
 
-function run(directory) {
+async function run(directory) {
 	if (typeof directory === "undefined") {
 		throw new TypeError("You must specify a directory.");
 	} else if (typeof directory !== "string") {
@@ -16,9 +16,11 @@ function run(directory) {
 	const done = {};
 	let problemCount = 0;
 
-	checkers.map(checker => {
+	const checkened = await Promise.all(checkers.map(checker => {
 		return checker.check(directory);
-	}).flat().forEach(file => {
+	}));
+	
+	checkened.flat().forEach(file => {
 		if (!done[file.path]) {
 			done[file.path] = new File(file.path, []);
 		}
