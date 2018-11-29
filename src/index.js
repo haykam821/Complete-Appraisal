@@ -21,9 +21,9 @@ function run(directory) {
 		if (!done[file.path]) {
 			done[file.path] = new File(file.path, []);
 		}
-		done[file.path].errors = done[file.path].errors.concat(...file.errors);
+		done[file.path].problems = done[file.path].problems.concat(...file.errors);
 	});
 
-	return done;
+	return Object.values(done);
 }
 module.exports = run;

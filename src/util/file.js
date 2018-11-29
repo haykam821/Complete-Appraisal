@@ -1,9 +1,9 @@
 const path = require("path");
 
 class File {
-	constructor(filePath, errors) {
+	constructor(filePath, problems) {
 		this.path = path.relative("./", filePath);
-		this.errors = errors;
+		this.problems = problems;
 	}
 }
 module.exports = File;
