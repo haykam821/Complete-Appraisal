@@ -9,7 +9,13 @@ const File = require("./util/file.js");
 const fs = require("fs-extra");
 const path = require("path");
 
-async function run(directory, ignore = []) {
+/**
+ * Appraises files in a directory.
+ * @param {string} directory The directory to appraise.
+ * @param {string[]} ignore An array of glob patterns to ignore.
+ * @returns {Promise<Object>} The appraisal's information.
+ */
+async function appraise(directory, ignore = []) {
 	if (typeof directory === "undefined") {
 		throw new TypeError("You must specify a directory.");
 	} else if (typeof directory !== "string") {
@@ -40,4 +46,4 @@ async function run(directory, ignore = []) {
 		problemCount,
 	}
 }
-module.exports = run;
+module.exports = appraise;
