@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const path = require("path");
 
 async function cli(args) {
-	const {problems, problemCount} = await run(path.resolve(process.cwd(), args.directory));
+	const {problems, problemCount} = await run(path.resolve(process.cwd(), args.directory), args.ignore);
 
 	process.stdout.write("\n" + problems.filter(file => {
 		// Hide a file if it has no problems
@@ -27,6 +27,10 @@ yargs.command("* [directory]", "Appraises a directory.", builder => {
 	builder.positional("directory", "The directory to appraise.", {
 		default: ".",
 		type: "string",
+	});
+	builder.option("ignore", "The glob patterns to ignore.", {
+		alias: "i",
+		type: "array",
 	});
 }, run);
 
