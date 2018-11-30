@@ -3,6 +3,16 @@
 const run = require(".");
 const chalk = require("chalk");
 
+function posSyntax(line, column) {
+	if (line && column) {
+		return `${line}:${column}`;
+	} else if (line) {
+		return line.toString();
+	} else {
+		return "";
+	}
+}
+
 async function cli() {
 	const {problems, problemCount} = await run(process.cwd());
 
@@ -11,7 +21,7 @@ async function cli() {
 		return file.problems.length > 0;
 	}).map(file => {
 		return chalk.bold.red(file.path) + "\n" + file.problems.map(problem => {
-			const lc = problem.line + (problem.column ? ":" + problem.column : "");
+			const lc = posSyntax(problem.line, problem.column);
 			return chalk`{yellow ${lc.padStart(8)}} {white ${problem.message}} {gray ${problem.id}}`;
 		}).join("\n");
 	}).join("\n\n") + "\n\n");
