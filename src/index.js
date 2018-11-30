@@ -6,6 +6,9 @@ const checkers = Object.values(rqAll({
 
 const File = require("./util/file.js");
 
+const fs = require("fs-extra");
+const path = require("path");
+
 async function run(directory) {
 	if (typeof directory === "undefined") {
 		throw new TypeError("You must specify a directory.");
@@ -13,11 +16,14 @@ async function run(directory) {
 		throw new TypeError("The directory must be a string.");
 	}
 
+	const gitignore = await fs.readFile(path.resolve(directory, "./.gitignore"));
+	const ignored = gitignore.toString().split("\n");
+
 	const done = {};
 	let problemCount = 0;
 
 	const checkened = await Promise.all(checkers.map(checker => {
-		return checker.check(directory);
+		return checker.check(directory, ignored);
 	}));
 	
 	checkened.flat().forEach(file => {
