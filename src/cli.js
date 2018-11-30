@@ -2,9 +2,10 @@
 
 const run = require(".");
 const chalk = require("chalk");
+const path = require("path");
 
-async function cli() {
-	const {problems, problemCount} = await run(process.cwd());
+async function cli(args) {
+	const {problems, problemCount} = await run(path.resolve(process.cwd(), args.directory));
 
 	process.stdout.write("\n" + problems.filter(file => {
 		// Hide a file if it has no problems
@@ -20,4 +21,13 @@ async function cli() {
 		process.exitCode = 1;
 	}
 }
+
+const yargs = require("yargs");
+yargs.command("* [directory]", "Appraises a directory.", builder => {
+	builder.positional("directory", "The directory to appraise.", {
+		default: ".",
+		type: "string",
+	});
+}, run);
+
 cli();
