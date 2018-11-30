@@ -2,6 +2,7 @@
 
 const run = require(".");
 const chalk = require("chalk");
+const path = require("path");
 
 function posSyntax(line, column) {
 	if (line && column) {
@@ -13,8 +14,8 @@ function posSyntax(line, column) {
 	}
 }
 
-async function cli() {
-	const {problems, problemCount} = await run(process.cwd());
+async function cli(args) {
+	const {problems, problemCount} = await run(path.resolve(process.cwd(), args.directory), args.ignore);
 
 	process.stdout.write("\n" + problems.filter(file => {
 		// Hide a file if it has no problems
@@ -30,4 +31,17 @@ async function cli() {
 		process.exitCode = 1;
 	}
 }
+
+const yargs = require("yargs");
+yargs.command("* [directory]", "Appraises a directory.", builder => {
+	builder.positional("directory", "The directory to appraise.", {
+		default: ".",
+		type: "string",
+	});
+	builder.option("ignore", "The glob patterns to ignore.", {
+		alias: "i",
+		type: "array",
+	});
+}, run);
+
 cli();

@@ -9,7 +9,13 @@ const File = require("./util/file.js");
 const fs = require("fs-extra");
 const path = require("path");
 
-async function run(directory) {
+/**
+ * Appraises files in a directory.
+ * @param {string} directory The directory to appraise.
+ * @param {string[]} ignore An array of glob patterns to ignore.
+ * @returns {Promise<Object>} The appraisal's information.
+ */
+async function appraise(directory, ignore = []) {
 	if (typeof directory === "undefined") {
 		throw new TypeError("You must specify a directory.");
 	} else if (typeof directory !== "string") {
@@ -17,7 +23,8 @@ async function run(directory) {
 	}
 
 	const gitignore = await fs.readFile(path.resolve(directory, "./.gitignore"));
-	const ignored = gitignore.toString().split("\n");
+	const gitignored = gitignore.toString().split("\n");
+	const ignored = ignore.concat(gitignored);
 
 	const done = {};
 	let problemCount = 0;
@@ -39,4 +46,4 @@ async function run(directory) {
 		problemCount,
 	}
 }
-module.exports = run;
+module.exports = appraise;
