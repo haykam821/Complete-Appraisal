@@ -11,7 +11,7 @@ async function cli() {
 		return file.problems.length > 0;
 	}).map(file => {
 		return chalk.bold.red(file.path) + "\n" + file.problems.map(problem => {
-			const lc = problem.line + ":" + problem.column;
+			const lc = problem.line + (problem.column ? ":" + problem.column : "");
 			return chalk`{yellow ${lc.padStart(8)}} {white ${problem.message}} {gray ${problem.id}}`;
 		}).join("\n");
 	}).join("\n\n") + "\n\n");
